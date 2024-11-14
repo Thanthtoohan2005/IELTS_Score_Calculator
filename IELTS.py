@@ -1,15 +1,19 @@
 from tkinter import *
 import customtkinter
 
+
+#cleans (or clears) a Tkinter frame by destroying all widgets inside it. 
 def clean_frame(frame):
+    """
+   widget.destroy() is called on each child widget, which removes it from the GUI entirely. 
+   This effectively clears out all widgets inside the frame, leaving it empty.
+   """
     for widget in frame.winfo_children():
-        widget.destroy()
-
-
+        widget.destroy() #destorys
 
 def realone():
-    clean_frame(mainFrame)
-    customtkinter.CTkLabel(mainFrame,text="Welcome",font=("Arial",20,"bold")).pack(padx=10,pady=10)
+    clean_frame(mainFrame) #clears the mainFrame
+    customtkinter.CTkLabel(mainFrame,text="Welcome",font=("Arial",20,"bold")).pack(padx=10,pady=10)  #pack() places it centered horizontally at the top of mainFrame.
     instruction = customtkinter.CTkLabel(mainFrame,text="For those interested in checking their band scores, there are four main components available in this app.",font=("Georgia",15)).place(relx=0.01,rely=0.1)
     instruction = customtkinter.CTkLabel(mainFrame,text="1. Overall Band Score",font=("Georgia",15)).place(relx=0.01,rely=0.2)
     instruction = customtkinter.CTkLabel(mainFrame,text="2. Reading Band Score",font=("Georgia",15)).place(relx=0.01,rely=0.3)
@@ -23,16 +27,16 @@ def Listening():
     customtkinter.CTkLabel(mainFrame, text="Listening Band Score Calculation",font=("Arial",18,"bold")).place(relx=0.41,rely=0.02)
     customtkinter.CTkButton(mainFrame,text="Back to main section",command=realone).place(relx=0.65,rely=0.25)
 
-    Lresult_label = customtkinter.CTkLabel(mainFrame,text="",font=("Arial",18,"bold"))
-    Lresult_label.place(relx=0.43,rely=0.3)
+    Lresult_label = customtkinter.CTkLabel(mainFrame,text="",font=("Arial",18,"bold")) #It's there but empty string = invisible
+    Lresult_label.place(relx=0.43,rely=0.3) #place() actually places the label
 
 
     def Listening_submit():
-     answerL = listening_entry.get()
+     answerL = listening_entry.get() #listening entry defined elsewhere. awaits input
      
-
+     #answerL instance stroes user's input
      if answerL == "40" or answerL == "39":
-        Lresult_label.configure(text="Your band score is 9!")
+        Lresult_label.configure(text="Your band score is 9!") #configure makes the invisible visible
      elif answerL == "38" or answerL == "37":
         Lresult_label.configure(text="Your band score is 8.5!")
      elif answerL == "36" or answerL == "35":
@@ -73,6 +77,7 @@ def Listening():
       
        Lresult_label.configure(text="")
 
+    #listening_entry here. CTkEntry = input_box
     listening_entry = customtkinter.CTkEntry(mainFrame,placeholder_text="Enter number of correct answers!",width=200,height=30)
     listening_entry.place(relx=0.422,rely=0.15)
 
@@ -223,54 +228,60 @@ def OBS():
 
    Oresult_label = customtkinter.CTkLabel(mainFrame,text="",font=("Arial",18,"bold"))
    Oresult_label.place(relx=0.4,rely=0.7)
+   Orecommand_label = customtkinter.CTkLabel(mainFrame, text="", font=("Arial", 18, "bold"))
+   Orecommand_label.place(relx=0.4, rely=1)
 
+   def overall_bandscore():
 
+      def calculate(a, b, c, d):
 
-   def calculate():
-    
-    try:
-       L = float(listening_entry.get().strip())
-       R = float(reading_entry.get().strip())
-       W = float(writing_entry.get().strip())
-       S = float(speaking_entry.get().strip())
+         add = a+b+c+d
+         average = add/4
 
-       
-       
-
-       add = L+R+W+S
-       average = add/4
-
-
-
-       if average % 1 >= 0.75:
-          result = int(average) + 1
-          Oresult_label.configure(text=f"Congratulation! Your overall band score is {result}!")
-          
-
-       elif average % 1 >= 0.5:
-          result = int(average)+0.5
-          Oresult_label.configure(text=f"Congratulation! Your overall band score is {result}!")
-      
-       elif average % 1 >= 0.25:
-          result = int(average)+0.5
-          Oresult_label.configure(text=f"Congratulation! Your overall band score is {result}!")
-       elif average > 9:
-          result = int(average)
-          Oresult_label.configure(text="Score must be between 0 and 9.")
-
-       else:
-          result = int(average)
-          Oresult_label.configure(text=f"Congratulation! Your overall band score is {result}!")
-
-        
-
-       
+         if average % 1 >= 0.75:
+            result = int(average) + 1
+            Oresult_label.configure(text=f"Congratulation! Your overall band score is {result}!")
+            return result
          
-   
+         elif average % 1 >= 0.5:
+            result = int(average)+0.5
+            Oresult_label.configure(text=f"Congratulation! Your overall band score is {result}!")
+            return result
+      
+         elif average % 1 >= 0.25:
+            result = int(average)+0.5
+            Oresult_label.configure(text=f"Congratulation! Your overall band score is {result}!")
+            return result
+         elif average > 9:
+            result = int(average)
+            Oresult_label.configure(text="Score must be between 0 and 9.")
+            return result
+         else:
+            result = int(average)
+            Oresult_label.configure(text=f"Congratulation! Your overall band score is {result}!")
+            return result
 
+      try:
+         L = float(listening_entry.get().strip())
+         R = float(reading_entry.get().strip())
+         W = float(writing_entry.get().strip())
+         S = float(speaking_entry.get().strip())
 
-    except ValueError:
-      Oresult_label.configure(text="Please enter valid score!")
+      except ValueError:
+         Oresult_label.configure(text="Please enter valid score!")
+      
+      result = calculate(L, R, W, S)
+
+      if result >= 5 and result <= 7:
+         print("Range 5 to 7 resource")
+         Orecommand_label.configure("Range 5 to 7 resource")
+      elif result >= 8 and result <= 9:
+         print("Range 8 to 9 resouce")
+         Orecommand_label.configure("Range 8 to 9 resouce")
+      else:
+         print("gg")
+         Orecommand_label.configure("Wtf")
+         
        
 
    def reset():
@@ -279,9 +290,8 @@ def OBS():
       writing_entry.delete(0,"end")
       speaking_entry.delete(0,"end")
       Oresult_label.configure(text="")
+      Orecommand_label.configure(text="")
 
-     
-     
 
    listening_entry = customtkinter.CTkEntry(mainFrame,placeholder_text="Please enter valid band score!",width=200,height=30)
    listening_entry.place(relx=0.422,rely=0.15)
@@ -304,17 +314,11 @@ def OBS():
 
    
 
-   overall_band_score_button = customtkinter.CTkButton(mainFrame,text="Calculate",hover_color="blue",command=calculate)
+   overall_band_score_button = customtkinter.CTkButton(mainFrame,text="Calculate",hover_color="blue",command=overall_bandscore)
    overall_band_score_button.place(relx=0.45,rely=0.55)
 
    reset_button = customtkinter.CTkButton(mainFrame,text="Reset",hover_color="blue",command=reset)
    reset_button.place(relx=0.25,rely=0.55)
-
-
- 
-  
-    
-
 
 
 
